@@ -8,9 +8,12 @@ const ContactList = ({ contacts, q }) => {
 
   const filtered = useMemo(() => {
     const s = q.toLowerCase().trim();
-    return contacts.filter(c => 
-      fullName(c).toLowerCase().includes(s) || 
-      c.email.toLowerCase().includes(s) || 
+
+    const activeContacts = contacts.filter(c => !c.deleted);
+
+    return activeContacts.filter(c =>
+      fullName(c).toLowerCase().includes(s) ||
+      (c.email || '').toLowerCase().includes(s) ||
       (c.phone || '').toLowerCase().includes(s)
     );
   }, [contacts, q]);

@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { colorFor, initials, textColorFor } from '../shared/helpers.js';
 import { DEFAULT_LABELS } from '../shared/constants.js';
 
-const GInput = ({ label, name, value, onChange, type = 'text', readOnly = false }) => {
+const GInput = ({ label, name, value, onChange, type = 'text', readOnly = false, required = false }) => {
   const inputId = `input-${name}`;
   return (
     <div className="google-input-wrap">
@@ -15,8 +15,9 @@ const GInput = ({ label, name, value, onChange, type = 'text', readOnly = false 
         value={value}
         onChange={onChange}
         placeholder=" "
-        autoComplete="off"
+        autoComplete="on"
         readOnly={readOnly}
+        required={required}
       />
       <label className="google-label" htmlFor={inputId}>{label}</label>
     </div>
@@ -53,14 +54,14 @@ const ContactForm = ({ contacts, setContacts }) => {
     }));
   };
 
-  const handleLabelToggle = (labelId) => {
-    setForm(prev => ({
-      ...prev,
-      labels: prev.labels.includes(labelId)
-        ? prev.labels.filter(id => id !== labelId)
-        : [...prev.labels, labelId]
-    }));
-  };
+const handleLabelToggle = (labelId) => {
+  setForm(prev => ({
+    ...prev,
+    labels: prev.labels.includes(labelId)
+      ? prev.labels.filter(id => id !== labelId)
+      : [...prev.labels, labelId]
+  }));
+};
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -68,6 +69,19 @@ const ContactForm = ({ contacts, setContacts }) => {
       alert('First name is required');
       return;
     }
+
+    const phoneDigits = form.phone.replace(/\D/g, '');
+
+    if (!phoneDigits.length) {
+      alert('Contact number is required');
+      return;
+    }
+
+    if (phoneDigits.length !== 10) {
+      alert('Contact number must be exactly 10 digits');
+      return;
+    }
+
 
     if (isEdit) {
       setContacts(prev => prev.map(c => 
@@ -119,7 +133,7 @@ const ContactForm = ({ contacts, setContacts }) => {
       <div className="field-row">
         <i className="bi bi-person" style={{fontSize:'20px', color:'var(--on-surface-variant)', marginTop:'22px', flexShrink:0}}></i>
         <div className="field-group">
-          <GInput label="First name" name="first" value={form.first} onChange={handleChange} />
+          <GInput label="First name" name="first" value={form.first} onChange={handleChange} required />
           <GInput label="Last name" name="last" value={form.last} onChange={handleChange} />
         </div>
       </div>
@@ -136,7 +150,7 @@ const ContactForm = ({ contacts, setContacts }) => {
       <div className="field-row">
         <i className="bi bi-telephone" style={{fontSize:'20px', color:'var(--on-surface-variant)', marginTop:'22px', flexShrink:0}}></i>
         <div className="field-group">
-          <GInput label="Phone" name="phone" value={form.phone} onChange={handleChange} type="tel" />
+          <GInput label="Phone" name="phone" value={form.phone} onChange={handleChange} type="tel" required />
           <div className="google-input-wrap" style={{minWidth: '130px'}}>
             <select
               id="input-label"
