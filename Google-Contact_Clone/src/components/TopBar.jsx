@@ -5,8 +5,8 @@ const TopBar = ({ q, setQ }) => {
   return (
     <div className="topbar">
       <Link to="/" className="logo">
-        <svg height="28" viewBox="0 0 75 24" style={{width: 'auto'}}>
-          <text y="20" fontFamily="'Google Sans',sans-serif" fontSize="22" fill="var(--on-surface-variant)">Contacts</text>
+        <svg height="28" viewBox="0 0 75 24" style={{width: '110px'}}>
+          <text y="20" fontFamily="'Google Sans',sans-serif" fontSize="20" fill="var(--on-surface-variant)">Contacts</text>
         </svg>
       </Link>
       <div className="search-wrap">
